@@ -346,8 +346,8 @@ export default function UnifiedApp() {
   return (
     <div className="min-h-screen">
       <Head>
-        <title>TrustBridge - Cross-Border Payments via WhatsApp</title>
-        <meta name="description" content="Send money across borders instantly using WhatsApp" />
+        <title>Tera Finance - Cross-Border Payments via WhatsApp</title>
+        <meta name="description" content="Tera Finance — send money across borders instantly using WhatsApp" />
       </Head>
 
       {/* Floating Navigation */}
