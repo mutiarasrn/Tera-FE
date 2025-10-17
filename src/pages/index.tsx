@@ -14,6 +14,7 @@ import {
   DollarSign,
   Clock,
   CheckCircle,
+  ChevronDown,
   Eye,
   EyeOff,
   Menu,
@@ -72,7 +73,7 @@ const SENDER_CURRENCIES = [
   { code: 'EUR', name: 'Euro', symbol: '€', flag: '🇪🇺' },
   { code: 'GBP', name: 'British Pound', symbol: '£', flag: '🇬🇧' },
   { code: 'ETH', name: 'Ethereum', symbol: 'Ξ', flag: '⚡' },
-  { code: 'ADA', name: 'Cardano', symbol: '₳', flag: '⚡' },
+  // ADA removed per request
 ];
 
 const RECIPIENT_CURRENCIES = [
@@ -92,6 +93,7 @@ export default function UnifiedApp() {
   const [isFaucetClaiming, setIsFaucetClaiming] = useState(false);
   const [faucetAddress, setFaucetAddress] = useState('');
   const [faucetSuccess, setFaucetSuccess] = useState(false);
+  const [selectedToken, setSelectedToken] = useState('USDC');
 
   // TEMPORARY: Set to true to view all features without backend
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -130,7 +132,7 @@ export default function UnifiedApp() {
       transferId: 'TXN003',
       status: 'completed',
       paymentMethod: 'WALLET',
-      sender: { currency: 'ADA', amount: 200 },
+      sender: { currency: 'USDC', amount: 200 },
       recipient: { name: 'Bob Wilson', currency: 'USD', amount: 80 },
       createdAt: new Date(Date.now() - 172800000).toISOString()
     }
@@ -149,6 +151,30 @@ export default function UnifiedApp() {
   const historyRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
   const faucetRef = useRef<HTMLElement>(null);
+  const [isTokenMenuOpen, setIsTokenMenuOpen] = useState(false);
+  const tokenMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (!tokenMenuRef.current) return;
+      if (tokenMenuRef.current.contains(e.target as Node)) return;
+      setIsTokenMenuOpen(false);
+    };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsTokenMenuOpen(false);
+    };
+
+    document.addEventListener('click', onClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('click', onClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, []);
+
+  // Fixed faucet token options
+  const FAUCET_TOKENS = ['USDC', 'IDRX', 'CNHT', 'EUROC', 'JPYC', 'MXNT'];
 
   useEffect(() => {
     // Check authentication (commented out for demo)
@@ -283,22 +309,23 @@ export default function UnifiedApp() {
 
   const handleFaucetClaim = async () => {
     if (!faucetAddress || faucetAddress.trim() === '') {
-      alert('Please enter a valid ETH address');
+      alert(`Please enter a valid address to receive ${selectedToken}`);
       return;
     }
 
     setIsFaucetClaiming(true);
     setFaucetSuccess(false);
 
-    // Simulate API call
+    // Simulate API call (token-agnostic)
     setTimeout(() => {
       setIsFaucetClaiming(false);
       setFaucetSuccess(true);
-      
+
       // Reset after 5 seconds
       setTimeout(() => {
         setFaucetSuccess(false);
         setFaucetAddress('');
+        setSelectedToken(FAUCET_TOKENS.includes('USDC') ? 'USDC' : FAUCET_TOKENS[0] || 'USDC');
       }, 5000);
     }, 2000);
   };
@@ -994,35 +1021,63 @@ export default function UnifiedApp() {
         <div className="max-w-3xl mx-auto w-full">
           <div className="text-center mb-12">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-              <span className="text-blue-300">ETH Faucet</span>
+              <span className="text-blue-300">Faucet</span>
             </h2>
-            <p className="text-lg text-blue-200">Get free testnet ETH for development</p>
+            <p className="text-lg text-blue-200">Claim available test tokens for development</p>
           </div>
 
           <Card className="glass-dark border-blue-400/30 glow-blue">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center space-x-2 text-xl">
                 <Zap className="w-6 h-6 text-yellow-400" />
-                <span>Claim Test ETH</span>
+                <span>Claim Test Token</span>
               </CardTitle>
               <CardDescription className="text-blue-200 text-sm">
-                Enter your Ethereum address to receive 0.1 testnet ETH
+                Enter your address and choose which test token you want to receive
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5 pt-0">
-              {/* ETH Address Input */}
+              {/* Address + Token Selection */}
               <div>
                 <label className="block text-sm font-medium text-blue-200 mb-2">
-                  Your ETH Address
+                  Your Address
                 </label>
-                <Input
-                  type="text"
-                  placeholder="0x..."
-                  value={faucetAddress}
-                  onChange={(e) => setFaucetAddress(e.target.value)}
-                  disabled={isFaucetClaiming}
-                  className="glass border-blue-400/30 text-white placeholder:text-blue-300/60 focus:border-blue-400 focus:ring-blue-500 rounded-xl py-6"
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    type="text"
+                    placeholder="0x... or address"
+                    value={faucetAddress}
+                    onChange={(e) => setFaucetAddress(e.target.value)}
+                    disabled={isFaucetClaiming}
+                    className="glass border-blue-400/30 text-white placeholder:text-blue-300/60 focus:border-blue-400 focus:ring-blue-500 rounded-xl h-16 px-4"
+                  />
+                  {/* Custom dropdown to allow styling of the options list */}
+                  <div className="relative" ref={tokenMenuRef}>
+                    <button
+                      type="button"
+                      onClick={() => setIsTokenMenuOpen(v => !v)}
+                      disabled={isFaucetClaiming}
+                      className="glass border-blue-400/30 bg-transparent text-white placeholder:text-blue-300/60 focus:border-blue-400 focus:ring-blue-500 rounded-xl h-16 px-4 w-full flex items-center justify-between"
+                    >
+                      <span>{selectedToken}</span>
+                      <ChevronDown className="w-5 h-5 text-blue-200 ml-3" />
+                    </button>
+
+                    {isTokenMenuOpen && (
+                      <ul className="absolute right-0 left-0 mt-2 bg-[#071024] border border-blue-400/20 rounded-xl shadow-lg z-50 max-h-56 overflow-auto">
+                        {FAUCET_TOKENS.map((t) => (
+                          <li
+                            key={t}
+                            onClick={() => { setSelectedToken(t); setIsTokenMenuOpen(false); }}
+                            className="px-4 py-3 hover:bg-blue-900/40 text-white cursor-pointer"
+                          >
+                            {t}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Success Message */}
@@ -1032,7 +1087,7 @@ export default function UnifiedApp() {
                     <CheckCircle className="w-6 h-6 text-green-400" />
                     <div>
                       <p className="text-green-300 font-medium">Success!</p>
-                      <p className="text-green-200 text-sm">0.1 ETH has been sent to your address</p>
+                      <p className="text-green-200 text-sm">{`${selectedToken} has been sent to ${faucetAddress}`}</p>
                     </div>
                   </div>
                 </div>
@@ -1047,7 +1102,7 @@ export default function UnifiedApp() {
                 {isFaucetClaiming ? (
                   <div className="flex items-center space-x-2">
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Claiming...</span>
+                    <span>{`Claiming ${selectedToken}...`}</span>
                   </div>
                 ) : faucetSuccess ? (
                   <div className="flex items-center space-x-2">
@@ -1057,7 +1112,7 @@ export default function UnifiedApp() {
                 ) : (
                   <div className="flex items-center space-x-2">
                     <Zap className="w-5 h-5" />
-                    <span>Claim 0.1 ETH</span>
+                    <span>{`Claim ${selectedToken}`}</span>
                   </div>
                 )}
               </Button>
@@ -1071,15 +1126,15 @@ export default function UnifiedApp() {
                 <ul className="space-y-2 text-blue-200 text-xs">
                   <li className="flex items-start space-x-2">
                     <span className="text-blue-400 mt-0.5">•</span>
-                    <span>Testnet ETH only - no real value</span>
+                    <span>Testnet tokens only - no real value</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-blue-400 mt-0.5">•</span>
-                    <span>Limit: 0.1 ETH per address per 24 hours</span>
+                    <span>Limit per token may apply per address per 24 hours</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-blue-400 mt-0.5">•</span>
-                    <span>Funds will arrive within 1-2 minutes</span>
+                    <span>Funds will arrive within a few minutes</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-blue-400 mt-0.5">•</span>
