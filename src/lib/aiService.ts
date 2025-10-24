@@ -86,8 +86,8 @@ Supported wallets: Eternl, Nami, Flint, and more Cardano wallets.`;
     
     if (lowerMessage.includes('fee') || lowerMessage.includes('cost')) {
       return `💰 TrustBridge Fees:
-      
-• Network Fee: ~0.5 ADA (paid to Cardano network)
+
+• Network Fee: ~0.5 USDC (paid to Cardano network)
 • Service Fee: 0.1% of transaction amount
 • No hidden charges or monthly fees
 • Save up to 90% compared to traditional remittance
@@ -168,9 +168,9 @@ Keep response concise and user-friendly.
 
     if (status === 'completed') {
       return `✅ Transaction completed successfully!
-      
-Amount: ${amount} ADA
-Network Fee: ${fee} ADA
+
+Amount: ${amount} USDC
+Network Fee: ${fee} USDC
 Status: Confirmed on blockchain
 
 Your payment has been processed and is now immutable on the Cardano network.`;
@@ -178,19 +178,19 @@ Your payment has been processed and is now immutable on the Cardano network.`;
     
     if (status === 'pending') {
       return `⏳ Transaction is being processed...
-      
-Amount: ${amount} ADA  
-Expected Fee: ${fee} ADA
+
+Amount: ${amount} USDC
+Expected Fee: ${fee} USDC
 Status: Waiting for network confirmation
 
 This usually takes 1-3 minutes on Cardano. You'll receive a notification when complete.`;
     }
 
     return `📊 Transaction Analysis:
-    
+
 Status: ${status}
-Amount: ${amount} ADA
-Fee: ${fee} ADA
+Amount: ${amount} USDC
+Fee: ${fee} USDC
 
 Need more details? Check your transaction history or contact support.`;
   }
@@ -202,7 +202,7 @@ Need more details? Check your transaction history or contact support.`;
 1. Start with a small amount to test the system
 2. Double-check the recipient's wallet address
 3. Save frequently used contacts for faster payments
-4. Keep some ADA for transaction fees
+4. Keep some USDC for transaction fees
 
 Ready to send your first crypto payment via WhatsApp?`,
 

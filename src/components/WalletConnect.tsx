@@ -86,7 +86,7 @@ export function WalletConnect() {
               <div className="min-w-0">
                 <CardTitle className="text-base md:text-lg text-glow">Connected</CardTitle>
                 <CardDescription className="text-sm">
-                  Balance: {balance} ADA
+                  Balance: {balance} USDC
                 </CardDescription>
               </div>
             </div>

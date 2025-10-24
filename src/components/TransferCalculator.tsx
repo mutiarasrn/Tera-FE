@@ -236,9 +236,9 @@ export default function TransferCalculator({
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">ADA Amount:</span>
+              <span className="text-muted-foreground">USDC Amount:</span>
               <span className="font-medium text-blue-400">
-                {calculation.adaAmount.toFixed(2)} ADA
+                {calculation.adaAmount.toFixed(2)} USDC
               </span>
             </div>
 
