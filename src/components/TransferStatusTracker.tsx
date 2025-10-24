@@ -338,10 +338,10 @@ export default function TransferStatusTracker({ transferId, onClose }: TransferS
             <div className="flex justify-between items-center">
               <span className="text-gray-300 flex items-center gap-2">
                 <Star className="w-4 h-4 text-cyan-400" />
-                Quantum ADA:
+                Quantum USDC:
               </span>
               <span className="font-medium text-cyan-400">
-                {transferDetails.blockchain.mockADAAmount.toFixed(2)} ADA
+                {transferDetails.blockchain.mockADAAmount.toFixed(2)} USDC
               </span>
             </div>
             <div className="border-t border-white/20 pt-3 flex justify-between items-center">

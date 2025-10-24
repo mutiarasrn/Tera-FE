@@ -231,10 +231,10 @@ export default function UnifiedApp() {
     // TEMPORARY: Mock calculation for demo (no backend needed)
     const amountValue = parseFloat(amount);
     const exchangeRates: { [key: string]: { [key: string]: number } } = {
-      'USD': { 'IDR': 15000, 'PHP': 56, 'EUR': 0.92, 'CNY': 7.2, 'ADA': 2.5 },
-      'EUR': { 'IDR': 16300, 'PHP': 61, 'USD': 1.09, 'CNY': 7.8, 'ADA': 2.7 },
-      'GBP': { 'IDR': 19000, 'PHP': 71, 'USD': 1.27, 'EUR': 1.17, 'ADA': 3.2 },
-      'ADA': { 'USD': 0.4, 'EUR': 0.37, 'IDR': 6000, 'PHP': 22, 'CNY': 2.9 },
+      'USD': { 'IDR': 15000, 'PHP': 56, 'EUR': 0.92, 'CNY': 7.2, 'USDC': 1 },
+      'EUR': { 'IDR': 16300, 'PHP': 61, 'USD': 1.09, 'CNY': 7.8, 'USDC': 1.09 },
+      'GBP': { 'IDR': 19000, 'PHP': 71, 'USD': 1.27, 'EUR': 1.17, 'USDC': 1.27 },
+      'USDC': { 'USD': 1, 'EUR': 0.92, 'IDR': 15000, 'PHP': 56, 'CNY': 7.2 },
     };
 
     const rate = exchangeRates[senderCurrency]?.[recipientCurrency] || 1;
@@ -732,7 +732,7 @@ export default function UnifiedApp() {
                 <CardContent className="pt-0">
                   <div className="mb-6">
                     <div className="text-4xl font-bold text-white mb-2">
-                      {showBalance ? `${balance?.ada.toFixed(2) || '0.00'} ADA` : '••••••'}
+                      {showBalance ? `${balance?.ada.toFixed(2) || '0.00'} USDC` : '••••••'}
                     </div>
                     <p className="text-blue-200 text-base">
                       {balance?.lovelace || '0'} Lovelace
